@@ -1,3 +1,5 @@
+const PopServer = require('../lib/popServer')
+
 describe('Feature Test', () => {
   let server
   beforeEach(() => {
