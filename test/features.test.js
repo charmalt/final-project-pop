@@ -18,6 +18,6 @@ describe('Feature Test', () => {
 
   it('Pop Server terminates connection', () => {
     server.close()
-    expect(console.log.mock.calls[1][0]).toEqual('Server closed')
+    expect(console.log.mock.calls[0][0]).toEqual('Server closed')
   })
 })
