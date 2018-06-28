@@ -19,6 +19,8 @@ describe ('Server', () => {
       return mockServer
     })
   serverInitSpy = jest.spyOn(mockServer, 'init')
+  serverStartSpy = jest.spyOn(mockServer, 'start')
+  serverCloseSpy = jest.spyOn(mockServer, 'close')
   })
 
   describe('default behaviour', () => {
@@ -36,6 +38,20 @@ describe ('Server', () => {
 
     it('gives the correct port and address to the server', () => {
       expect(serverInitSpy).toHaveBeenCalledWith(server.port, server.address, Handshake)
+    })
+  })
+
+  describe('starts tcpServer', () => {
+    it('calls start method on tcpServer', () => {
+      server.start()
+      expect(serverStartSpy).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('close', () => {
+    it('calls close method on tcpServer', () => {
+      server.close()
+      expect(serverCloseSpy).toHaveBeenCalledTimes(1)
     })
   })
 
