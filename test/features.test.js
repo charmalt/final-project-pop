@@ -1,20 +1,23 @@
+const PopServer = require('../lib/popServer')
+
 describe('Feature Test', () => {
   let server
-  beforeEach(() => {
+  beforeAll(() => {
     server = new PopServer()
     console.log = jest.fn()
-    server.start()
   })
 
-  afterAll(() => {
-    server.close()
+  beforeEach(() => {
+    console.log.mockClear()
   })
 
   it('Pop Server registers connection', () => {
+    server.start()
     expect(console.log.mock.calls[0][0]).toEqual('Server started')
   })
 
   it('Pop Server terminates connection', () => {
-    expect(console.log.mock.calls[0][0]).toEqual('Server disconnected')
+    server.close()
+    expect(console.log.mock.calls[0][0]).toEqual('Server closed')
   })
 })
