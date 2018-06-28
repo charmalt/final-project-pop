@@ -1,6 +1,6 @@
 const pg = require('pg')
-// const env = require('./config')
-const connectionString = 'postgres://localhost:5432/testmailbox'
+const env = require('./config')
+// const connectionString = 'postgres://localhost:5432/testmailbox'
 
 class Database {
   constructor() {
@@ -8,12 +8,12 @@ class Database {
 
   }
   pull () {
-    const client = new pg.Client(connectionString)
+    const client = new pg.Client(env['test'])
     client.connect()
     const query = client.query(
       `select * from mail`, (err , res) => {
-        this.data = res.rows
-      }.bind(this))
+        console.log(res.rows)
+      })
     query.on('end', () => { client.end() })
   }
 }
