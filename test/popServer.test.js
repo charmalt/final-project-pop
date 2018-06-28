@@ -3,9 +3,8 @@ const TCPServer = require('../utility/tcpServer')
 const Handshake = require('../lib/popClientHandshake')
 jest.mock('../utility/tcpServer')
 
-describe ('Server', () => {
-
-  let server, serverInitSpy
+describe('Server', () => {
+  let server, serverInitSpy, serverStartSpy, serverCloseSpy
   let mockServer = {
     init: jest.fn(),
     start: jest.fn(),
@@ -13,14 +12,14 @@ describe ('Server', () => {
   }
 
   beforeEach(() => {
-  server = new PopServer()
+    server = new PopServer()
     TCPServer.mockImplementation((port, address, handshake) => {
       mockServer.init(port, address, handshake)
       return mockServer
     })
-  serverInitSpy = jest.spyOn(mockServer, 'init')
-  serverStartSpy = jest.spyOn(mockServer, 'start')
-  serverCloseSpy = jest.spyOn(mockServer, 'close')
+    serverInitSpy = jest.spyOn(mockServer, 'init')
+    serverStartSpy = jest.spyOn(mockServer, 'start')
+    serverCloseSpy = jest.spyOn(mockServer, 'close')
   })
 
   describe('default behaviour', () => {
@@ -54,5 +53,4 @@ describe ('Server', () => {
       expect(serverCloseSpy).toHaveBeenCalledTimes(1)
     })
   })
-
 })
