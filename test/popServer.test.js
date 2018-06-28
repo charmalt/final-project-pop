@@ -24,8 +24,8 @@ describe ('Server', () => {
   })
 
   describe('default behaviour', () => {
-    it('has a port of 1337', () => {
-      expect(server.port).toBe(1337)
+    it('has a port of 5001', () => {
+      expect(server.port).toBe(5001)
     })
 
     it('has a default address of 127.0.0.1', () => {
