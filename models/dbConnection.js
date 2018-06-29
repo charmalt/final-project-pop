@@ -5,7 +5,6 @@ class DBConnection {
   constructor (dbClient = new Client(env['test'])) {
     this.client = dbClient
     this.client.connect()
-    console.log('hi')
   }
 }
 
