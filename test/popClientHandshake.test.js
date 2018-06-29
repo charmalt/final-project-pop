@@ -1,31 +1,41 @@
-const PopClientHandshake = require('../lib/popClientHandshake')
-const Database = require('../models/database')
-jest.mock('../models/database')
+const POPClientHandshake = require('../lib/popClientHandshake').POPClientHandshake
+const HandshakeFactory = require('../lib/popClientHandshake').HandshakeFactory
 
-describe('popClientHandshake', function () {
+describe('popClientHandshake', () => {
   let popClientHandshake
-  let mockDatabase, spyDatabase
-  mockDatabase = {
-    getMessages: jest.fn()
+  let mockDatabaseInterface, spyDatabase
+  mockDatabaseInterface = {
+    pull: jest.fn()
   }
 
-  beforeEach(function () {
-    popClientHandshake = new PopClientHandshake(mockDatabase)
+  beforeEach(() => {
+    popClientHandshake = new POPClientHandshake(mockDatabaseInterface)
 
-    spyDatabase = jest.spyOn(mockDatabase, 'getMessages')
+    spyDatabase = jest.spyOn(mockDatabaseInterface, 'pull')
   })
 
-  describe('return messages', function () {
-    it('should respond to client request Hello with 250', function () {
+  describe('HandshakeFactory', () => {
+    it('creates new handshake', () => {
+      expect(HandshakeFactory.build(mockDatabaseInterface)).toBeInstanceOf(POPClientHandshake)
+    })
+
+    it('passes on right arguments to constructor', () => {
+      let handshake = HandshakeFactory.build(mockDatabaseInterface)
+      expect(handshake.dbInterface).toBe(mockDatabaseInterface)
+    })
+  })
+
+  describe('return messages', () => {
+    it('should respond to client request Hello with 250', () => {
       expect(popClientHandshake.parseMessage('Hello')).toEqual('250')
     })
-    it('should respond to client request MessageRequest with messages', function () {
+    it('should respond to client request MessageRequest with messages', () => {
       expect(popClientHandshake.parseMessage('MessageRequest')).toEqual('')
     })
   })
 
-  describe('getting messages', function () {
-    it('should query database for message', function () {
+  describe('getting messages', () => {
+    it('should query database for message', () => {
       expect(spyDatabase).toHaveBeenCalledTimes(1)
     })
   })
