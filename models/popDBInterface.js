@@ -3,8 +3,8 @@ class POPDbInterface {
     this.connection = connection
   }
 
-  pull () {
-    return this.connection.query(`select * from mail`)
+  async pull () {
+    let response = await this.connection.client.query(`select * from mail`)
       .then((res) => {
         return res
       })
@@ -12,6 +12,7 @@ class POPDbInterface {
         console.log(err.stack)
         return false
       })
+    return response
   }
 }
 
