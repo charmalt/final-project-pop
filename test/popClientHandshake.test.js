@@ -5,12 +5,11 @@ describe('popClientHandshake', () => {
   let popClientHandshake
   let mockDatabaseInterface, spyDatabase
   mockDatabaseInterface = {
-    pull: jest.fn()
+    pull: jest.fn(() => { return 'test' })
   }
 
   beforeEach(() => {
     popClientHandshake = new POPClientHandshake(mockDatabaseInterface)
-
     spyDatabase = jest.spyOn(mockDatabaseInterface, 'pull')
   })
 
@@ -30,13 +29,17 @@ describe('popClientHandshake', () => {
       expect(popClientHandshake.parseMessage('Hello')).toEqual('250')
     })
     it('should respond to client request MessageRequest with messages', () => {
-      expect(popClientHandshake.parseMessage('MessageRequest')).toEqual('')
-    })
-  })
-
-  describe('getting messages', () => {
-    it('should query database for message', () => {
+      popClientHandshake.parseMessage('MessageRequest')
       expect(spyDatabase).toHaveBeenCalledTimes(1)
+    })
+    it('should return message from database', () => {
+      expect(popClientHandshake.parseMessage('MessageRequest')).toEqual('test')
+    })
+    it('should respond to client request Quit with 331', () => {
+      expect(popClientHandshake.parseMessage('Quit')).toEqual('331')
+    })
+    it('should respond to any other request with 501', () => {
+      expect(popClientHandshake.parseMessage('Quitsss')).toEqual('501')
     })
   })
 })
