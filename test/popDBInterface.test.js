@@ -2,7 +2,7 @@ const POPDbInterface = require('../models/popDBInterface')
 
 describe('POPDbInterface', () => {
   let popDbInterface
-  let mockConnection = { client: { query: jest.fn(() => { return new Promise((resolve, reject) => { resolve('DATA') }) }) } }
+  let mockConnection = { client: { query: jest.fn(() => { return new Promise((resolve, reject) => { resolve({rows: 'DATA'}) }) }) } }
   let mockFailedConnection = { client: { query: jest.fn(() => { return new Promise((resolve, reject) => { reject(new Error('FAIL')) }) }) } }
 
   it('returns the data when response resolves', async () => {

@@ -6,7 +6,7 @@ class POPDbInterface {
   async pull () {
     let response = await this.connection.client.query(`select * from mail`)
       .then((res) => {
-        return res
+        return res.rows
       })
       .catch((err) => {
         console.log(err.stack)
