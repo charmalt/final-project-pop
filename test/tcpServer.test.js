@@ -1,7 +1,4 @@
 const TCPServer = require('../lib/tcpServer')
-const TCPConnectedClient = require('../lib/tcpConnectedClient')
-
-jest.mock('../lib/tcpConnectedClient')
 jest.mock('net')
 
 describe('Server', () => {
@@ -28,15 +25,24 @@ describe('Server', () => {
     address: 'clientAddress',
     port: 2000,
     name: 'name',
-    socket: mockSocket2
+    socket: mockSocket2,
+    closeConnection: jest.fn()
   }
+  let mockHandshakeFactory = { build: jest.fn() }
+  let mockTCPConnectedClientFactory = { build: jest.fn(() => { return mockClient }) }
+  let mockDbInterface = {}
+  let handshakeFactorySpy
+  let clientCloseSpy
 
   beforeEach(() => {
-    server = new TCPServer(serverPort, serverAddress)
+    server = new TCPServer(serverPort, serverAddress, mockHandshakeFactory, mockTCPConnectedClientFactory, mockDbInterface)
     mockSpy = jest.spyOn(mockServer, 'listen')
+    handshakeFactorySpy = jest.spyOn(mockHandshakeFactory, 'build')
     serverCloseSpy = jest.spyOn(mockServer, 'close')
+    clientCloseSpy = jest.spyOn(mockClient, 'closeConnection')
     net.createServer = () => { return mockServer }
     console.log = jest.fn()
+    clientCloseSpy.mockClear()
   })
 
   it('creates an TCP server', () => {
@@ -58,12 +64,6 @@ describe('Server', () => {
   })
 
   describe('createClient', () => {
-    beforeEach(() => {
-      TCPConnectedClient.mockImplementation((socket) => {
-        return mockClient
-      })
-    })
-
     it('logs the new client connection', () => {
       server.createClient(mockSocket)
       expect(console.log.mock.calls[0][0]).toBe(`${mockClient.name} connected`)
@@ -77,6 +77,11 @@ describe('Server', () => {
       server.createClient(mockSocket)
       expect(server.clients).toContain(mockClient)
     })
+
+    it('build the new handshake', () => {
+      server.createClient(mockSocket)
+      expect(handshakeFactorySpy).toHaveBeenCalledWith(mockDbInterface)
+    })
   })
   describe('closeConnection', () => {
     it('logs the closed connection', () => {
@@ -86,10 +91,6 @@ describe('Server', () => {
   })
 
   describe('closeServer', () => {
-    let socketSpy
-    beforeEach(() => {
-      socketSpy = jest.spyOn(mockSocket2, 'destroy')
-    })
     it('closes server connection', () => {
       server.start()
       server.close()
@@ -106,7 +107,7 @@ describe('Server', () => {
       server.start()
       server.createClient(mockSocket)
       server.close()
-      expect(socketSpy).toHaveBeenCalledTimes(1)
+      expect(clientCloseSpy).toHaveBeenCalledTimes(1)
     })
 
     it('logs the closed connection', () => {

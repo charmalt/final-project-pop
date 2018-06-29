@@ -12,6 +12,7 @@ describe('POPDbInterface', () => {
   })
 
   it('returns null if there is an error', async () => {
+    console.log = jest.fn()
     popDbInterface = new POPDbInterface(mockFailedConnection)
     let result = await popDbInterface.pull()
     expect(result).toBeFalsy()
