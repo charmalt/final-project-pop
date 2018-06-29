@@ -1,6 +1,6 @@
 const PopClientHandshake = require('../lib/popClientHandshake')
 const Database = require('../models/database')
-jest.mock('../models/Database')
+jest.mock('../models/database')
 
 describe('popClientHandshake', function () {
   let popClientHandshake
