@@ -1,7 +1,7 @@
 const PopServer = require('../lib/popServer')
-const TCPServer = require('../utility/tcpServer')
+const TCPServer = require('../lib/tcpServer')
 const Handshake = require('../lib/popClientHandshake')
-jest.mock('../utility/tcpServer')
+jest.mock('../lib/tcpServer')
 
 describe('Server', () => {
   let server, serverInitSpy, serverStartSpy, serverCloseSpy
