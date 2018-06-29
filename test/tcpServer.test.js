@@ -26,13 +26,14 @@ describe('Server', () => {
     port: 2000,
     name: 'name',
     socket: mockSocket2,
-    closeConnection: jest.fn()
+    closeConnection: jest.fn(),
+    parseMessage: jest.fn()
   }
   let mockHandshakeFactory = { build: jest.fn() }
   let mockTCPConnectedClientFactory = { build: jest.fn(() => { return mockClient }) }
   let mockDbInterface = {}
   let handshakeFactorySpy
-  let clientCloseSpy
+  let clientCloseSpy, clientParseSpy
 
   beforeEach(() => {
     server = new TCPServer(serverPort, serverAddress, mockHandshakeFactory, mockTCPConnectedClientFactory, mockDbInterface)
@@ -40,6 +41,7 @@ describe('Server', () => {
     handshakeFactorySpy = jest.spyOn(mockHandshakeFactory, 'build')
     serverCloseSpy = jest.spyOn(mockServer, 'close')
     clientCloseSpy = jest.spyOn(mockClient, 'closeConnection')
+    clientParseSpy = jest.spyOn(mockClient, 'parseMessage')
     net.createServer = () => { return mockServer }
     console.log = jest.fn()
     clientCloseSpy.mockClear()
@@ -115,6 +117,14 @@ describe('Server', () => {
       server.createClient(mockSocket)
       server.close()
       expect(server.clients).toHaveLength(0)
+    })
+  })
+
+  describe('handleData', () => {
+    it('stringifies the data', () => {
+      let data = 123
+      server.handleData(mockClient, data)
+      expect(clientParseSpy).toHaveBeenCalledWith(data.toString())
     })
   })
 })
