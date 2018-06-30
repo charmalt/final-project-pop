@@ -1,4 +1,3 @@
-const { exec } = require('child_process')
 const DBConnection = require('../../models/dbConnection')
 const POPDbInterface = require('../../models/POPDbInterface')
 
