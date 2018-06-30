@@ -1,46 +1,35 @@
-const TCPConnectedClient = require('../lib/tcpConnectedClient.js').TCPConnectedClient
 const TCPConnectedClientFactory = require('../lib/tcpConnectedClient.js').TCPConnectedClientFactory
 
 describe('TCPClient', () => {
-  let client
-  let clientPort = 5001
-  let clientAddress = '127.0.0.0'
-  let mockSocket = {
+  const clientPort = 5001
+  const clientAddress = '127.0.0.0'
+  const handshakeQuit = 221
+  const mockMessage = 'Test String'
+  const mockSocket = {
     remoteAddress: clientAddress,
     remotePort: clientPort,
     name: `${clientAddress}:${clientPort}`,
     write: jest.fn(),
     destroy: jest.fn()
   }
-  let mockMessage = 'Test String'
-  let mockHandshake = {
-    parseMessage: jest.fn(() => 250),
-    responses: { quit: 221 }
+  const mockHandshake = {
+    parseMessage: jest.fn(() => { return new Promise((resolve, reject) => { resolve(250) }) }),
+    responses: { quit: handshakeQuit }
   }
+
+  let client
   let mockWrite
   let mockDestroy
 
   beforeEach(() => {
-    client = new TCPConnectedClient(mockSocket, mockHandshake)
+    client = TCPConnectedClientFactory.build(mockSocket, mockHandshake)
     mockWrite = jest.spyOn(mockSocket, 'write')
     mockDestroy = jest.spyOn(mockSocket, 'destroy')
     mockDestroy.mockClear()
   })
 
-  it('stores the address', () => {
-    expect(client.address).toBe(clientAddress)
-  })
-
-  it('stores the port', () => {
-    expect(client.port).toBe(clientPort)
-  })
-
   it('creates the name', () => {
     expect(client.name).toBe(`${clientAddress}:${clientPort}`)
-  })
-
-  it('stores the whole socket', () => {
-    expect(client.socket).toBe(mockSocket)
   })
 
   describe('receiveMessage', () => {
@@ -50,11 +39,17 @@ describe('TCPClient', () => {
     })
   })
 
-  describe('executeHandshake', () => {
-    it('parses message', () => {
+  describe('parseMessage', () => {
+    it('executes the handshake', () => {
       let spyHandshake = jest.spyOn(mockHandshake, 'parseMessage')
       client.parseMessage(mockMessage)
       expect(spyHandshake).toHaveBeenCalledWith(mockMessage)
+    })
+
+    it('handles the reposnse from the async', async () => {
+      let handleResponseSpy = jest.spyOn(client, 'handleResponse')
+      await client.parseMessage(mockMessage)
+      expect(handleResponseSpy).toHaveBeenCalledWith(250)
     })
   })
 
@@ -67,31 +62,19 @@ describe('TCPClient', () => {
 
   describe('handleResponse', () => {
     const response = 250
-    const quitResponse = 221
     it('sends response back to client', () => {
       client.handleResponse(response)
       expect(mockWrite).toHaveBeenCalledWith(response.toString())
     })
 
     it('closes connection on 221 response', () => {
-      client.handleResponse(quitResponse)
+      client.handleResponse(handshakeQuit)
       expect(mockDestroy).toHaveBeenCalledTimes(1)
     })
 
     it('keeps connection open when not a 221 reponse', () => {
       client.handleResponse(response)
       expect(mockDestroy).toHaveBeenCalledTimes(0)
-    })
-  })
-
-  describe('TCPConnectedClientFactory', () => {
-    it('should return new instance of TCPConnectedClient', () => {
-      expect(TCPConnectedClientFactory.build(mockSocket, mockHandshake)).toBeInstanceOf(TCPConnectedClient)
-    })
-    it('should pass the right arguments to TCPConnectedClient', () => {
-      let clientInstance = TCPConnectedClientFactory.build(mockSocket, mockHandshake)
-      expect(clientInstance.socket).toBe(mockSocket)
-      expect(clientInstance.handshake).toBe(mockHandshake)
     })
   })
 })
