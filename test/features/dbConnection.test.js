@@ -1,4 +1,4 @@
-const PopServer = require('../lib/popServer')
+const PopServer = require('../../lib/popServer')
 
 describe('Feature Test', () => {
   let server
