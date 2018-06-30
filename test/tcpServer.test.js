@@ -47,7 +47,7 @@ describe('Server', () => {
     clientCloseSpy.mockClear()
   })
 
-  it('creates an TCP server', () => {
+  it('creates a TCP server', () => {
     server.start()
     expect(server.connection).toEqual(mockServer)
   })
