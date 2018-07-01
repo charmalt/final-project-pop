@@ -1,5 +1,5 @@
 const DBConnection = require('../../models/dbConnection')
-const POPDbInterface = require('../../models/POPDbInterface')
+const POPDbInterface = require('../../models/popDBInterface')
 
 describe('Feature - databaseMailRequest', () => {
   let dbConnection, dbInterface
