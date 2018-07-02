@@ -1,32 +1,41 @@
-const PopClientHandshake = require('../lib/popClientHandshake')
-const Database = require('../models/database')
-jest.mock('../models/database')
+const HandshakeFactory = require('../lib/popClientHandshake').HandshakeFactory
 
-describe('popClientHandshake', function () {
+describe('popClientHandshake', () => {
   let popClientHandshake
-  let mockDatabase, spyDatabase
-  mockDatabase = {
-    getMessages: jest.fn()
+  let mockDatabaseInterface, spyDatabase
+  mockDatabaseInterface = {
+    pull: jest.fn(() => { return new Promise((resolve, reject) => { resolve('test') }) })
   }
 
-  beforeEach(function () {
-    popClientHandshake = new PopClientHandshake(mockDatabase)
-
-    spyDatabase = jest.spyOn(mockDatabase, 'getMessages')
+  beforeEach(() => {
+    popClientHandshake = HandshakeFactory.build(mockDatabaseInterface)
+    spyDatabase = jest.spyOn(mockDatabaseInterface, 'pull')
   })
 
-  describe('return messages', function () {
-    it('should respond to client request Hello with 250', function () {
-      expect(popClientHandshake.parseMessage('Hello')).toEqual('250')
+  describe('return messages', () => {
+    it('should respond to client request Hello with 250', async () => {
+      let response = await popClientHandshake.parseMessage('Hello')
+      expect(response).toEqual(250)
     })
-    it('should respond to client request MessageRequest with messages', function () {
-      expect(popClientHandshake.parseMessage('MessageRequest')).toEqual('')
-    })
-  })
-
-  describe('getting messages', function () {
-    it('should query database for message', function () {
+    it('should respond to client request MessageRequest with messages', async () => {
+      await popClientHandshake.parseMessage('MessageRequest')
       expect(spyDatabase).toHaveBeenCalledTimes(1)
+    })
+    it('should return message from database', async () => {
+      let response = await popClientHandshake.parseMessage('MessageRequest')
+      expect(response).toEqual('test')
+    })
+    it('should respond to client request Quit with 331', async () => {
+      let response = await popClientHandshake.parseMessage('QUIT')
+      expect(response).toEqual(331)
+    })
+    it('should respond to other requests with 501', async () => {
+      let response = await popClientHandshake.parseMessage('Quitsss')
+      expect(response).toEqual(501)
+    })
+    it('should respond to any other request with 501', async () => {
+      let response = await popClientHandshake.parseMessage('Another')
+      expect(response).toEqual(501)
     })
   })
 })
