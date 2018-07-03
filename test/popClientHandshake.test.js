@@ -14,7 +14,7 @@ describe('popClientHandshake', () => {
 
   describe('return messages', () => {
     it('should respond to client request Hello with 250', async () => {
-      let response = await popClientHandshake.parseMessage('Hello')
+      let response = await popClientHandshake.parseMessage('HELLO')
       expect(response).toEqual(250)
     })
     it('should respond to client request "USER test@test.com" with 250', async () => {
