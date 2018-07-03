@@ -14,12 +14,21 @@ describe('popClientHandshake', () => {
 
   describe('return messages', () => {
     it('should respond to client request Hello with 250', async () => {
-      let response = await popClientHandshake.parseMessage('Hello')
+      let response = await popClientHandshake.parseMessage('HELLO')
       expect(response).toEqual(250)
     })
+    it('should respond to client request "USER test@test.com" with 250', async () => {
+      let response = await popClientHandshake.parseMessage('USER test@test.com')
+      expect(response).toEqual(250)
+    })
+    it('should save user email to variable this.user on client request "USER test@test.com"', async () => {
+      await popClientHandshake.parseMessage('USER test@test.com')
+      expect(popClientHandshake.user).toEqual('test@test.com')
+    })
     it('should respond to client request MessageRequest with messages', async () => {
+      await popClientHandshake.parseMessage('USER test@test.com')
       await popClientHandshake.parseMessage('MessageRequest')
-      expect(spyDatabase).toHaveBeenCalledTimes(1)
+      expect(spyDatabase).toHaveBeenNthCalledWith(1, 'test@test.com')
     })
     it('should return message from database', async () => {
       let response = await popClientHandshake.parseMessage('MessageRequest')
