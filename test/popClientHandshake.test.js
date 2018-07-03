@@ -17,6 +17,10 @@ describe('popClientHandshake', () => {
       let response = await popClientHandshake.parseMessage('Hello')
       expect(response).toEqual(250)
     })
+    it('should respond to client request "USER test@test.com" with 250', async () => {
+      let response = await popClientHandshake.parseMessage('USER test@test.com')
+      expect(response).toEqual(250)
+    })
     it('should respond to client request MessageRequest with messages', async () => {
       await popClientHandshake.parseMessage('MessageRequest')
       expect(spyDatabase).toHaveBeenCalledTimes(1)
