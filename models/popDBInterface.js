@@ -3,8 +3,8 @@ class POPDbInterface {
     this.connection = connection
   }
 
-  async pull () {
-    let response = await this.connection.client.query(`select * from mail`)
+  async pull (userEmail) {
+    let response = await this.connection.client.query(`select * from mail where mailto = '${userEmail}'`)
       .then((res) => {
         return res.rows
       })
