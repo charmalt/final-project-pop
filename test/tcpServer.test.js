@@ -127,4 +127,13 @@ describe('Server', () => {
       expect(clientParseSpy).toHaveBeenCalledWith(data.toString())
     })
   })
+
+  describe('cleanClients', () => {
+    it('deletes old clients', () => {
+      server.clients = [mockClient, mockClient, mockClient, mockClient, mockClient, mockClient, mockClient, mockClient, mockClient, mockClient]
+      server.createClient(mockSocket)
+      expect(server.clients.length).toEqual(10)
+      expect(clientCloseSpy).toHaveBeenCalledTimes(1)
+    })
+  })
 })
