@@ -14,6 +14,6 @@ module.exports = {
   'production': {
     dbConnectionString: process.env.PGPROD,
     popPort: 5001,
-    popHost: '192.168.48.51'
+    popHost: '192.168.0.5'
   }
 }

@@ -20,6 +20,7 @@ describe('TCPClient', () => {
   let client
   let mockWrite
   let mockDestroy
+  console.log = jest.fn()
 
   beforeEach(() => {
     client = TCPConnectedClientFactory.build(mockSocket, mockHandshake)
