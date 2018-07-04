@@ -1,5 +1,5 @@
 const Client = require('pg').Client
-const env = process.env.ENV || 'development'
+const env = process.env.NODE_ENV || 'development'
 const db = require('../config')[env].dbConnectionString
 
 class DBConnection {

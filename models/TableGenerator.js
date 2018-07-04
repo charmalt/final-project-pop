@@ -1,5 +1,6 @@
 const pg = require('pg')
-const env = process.env.ENV || 'development'
+console.log(process.env.NODE_ENV)
+const env = process.env.NODE_ENV || 'development'
 const db = require('../config')[env]['dbConnectionString']
 
 const clientTest = new pg.Client(db)

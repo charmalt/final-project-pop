@@ -4,6 +4,10 @@ const POPDbInterface = require('../../models/popDBInterface')
 describe('Feature - databaseMailRequest', () => {
   let dbConnection, dbInterface
 
+  beforeEach(() => {
+    console.log = jest.fn()
+  })
+
   it('requests mail for user from database', async () => {
     dbConnection = new DBConnection()
     dbInterface = new POPDbInterface(dbConnection)

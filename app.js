@@ -1,7 +1,7 @@
 let POPServer = require('./lib/popServer')
 let pg = require('pg')
-const env = require('./config')['production']
+const config = require('./config')['production']
 
-let dbClient = new pg.Client(env.dbConnectionString)
-let serverName = new POPServer(env.popHost, env.popPort, dbClient)
+let dbClient = new pg.Client(config.dbConnectionString)
+let serverName = new POPServer({ host: config.popHost, port: config.popPort, client: dbClient })
 serverName.start()
