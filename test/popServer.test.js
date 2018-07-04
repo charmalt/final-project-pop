@@ -68,9 +68,9 @@ describe('Server', () => {
     const port = 2222
     const host = 'localhost'
     const mockClient = 'client'
-
+    const options = { port: port, host: host, client: mockClient }
     beforeEach(() => {
-      server = new PopServer(host, port, mockClient)
+      server = new PopServer(options)
     })
 
     it('has a port of 5001', () => {
