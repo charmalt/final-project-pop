@@ -147,7 +147,7 @@ The aim for the project was to understand how email worked in greater detail. Th
 
 The following diagram shows the relationships between the objects as well as their properties and public methods.
 
-<span style="display:block;text-align:center">![Imgur](https://i.imgur.com/mHMH7OV.jpg)</span>
+![Imgur](https://i.imgur.com/mHMH7OV.jpg)
 
 ### Technologies
 
