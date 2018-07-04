@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "jest --forceExit --coverage",
+    "test": "ENV='test' jest --forceExit --coverage",
     "lint": "eslint src/js",
     "buildDB": "jake --jakefile jake.js makeDatabases",
     "dropDB": "jake --jakefile jake.js dropDatabases",
