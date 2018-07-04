@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "runtests": "jest --forceExit --coverage",
+    "test": "jest --forceExit --coverage",
     "lint": "eslint src/js",
     "buildDB": "jake --jakefile jake.js makeDatabases",
     "dropDB": "jake --jakefile jake.js dropDatabases",
-    "test": "ENV='test' npm run dropDB && npm run buildDB && npm run runtests"
+    "testLocal": "ENV='test' npm run dropDB && npm run buildDB && npm run test"
   },
   "dependencies": {
     "dotenv": "^6.0.0",
