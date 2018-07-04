@@ -147,6 +147,8 @@ The aim for the project was to understand how email worked in greater detail. Th
 
 The following diagram shows the relationships between the objects as well as their properties and public methods.
 
+<span style="display:block;text-align:center">![Imgur](https://i.imgur.com/mHMH7OV.jpg)</span>
+
 ### Technologies
 
 The project was written using Javascript with ES6 syntax. This language was selected as the most suitable for the team based on its growing popularity, level of familiarity across all team members and interesting challenges around asynchronous behaviour. We used Jest as the testing framework and ESLint for code style.
