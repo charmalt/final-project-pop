@@ -7,3 +7,5 @@ install:
  - jake --jakefile jake.js makeDatabases
 services:
  - postgresql
+env:
+ - NODE_ENV="test"

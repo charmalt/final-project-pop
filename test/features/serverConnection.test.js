@@ -18,7 +18,7 @@ describe('Feature Test', () => {
     console.log.mockClear()
   })
   it('Pop Server starts and terminates connection', async () => {
-    let server2 = new PopServer('127.0.0.1', 1337)
+    let server2 = new PopServer({ host: '127.0.0.1', port: 1337 })
     await server2.start()
     await server2.close()
     expect(console.log.mock.calls[0][0]).toEqual('Server started')

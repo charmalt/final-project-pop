@@ -11,17 +11,20 @@ jest.mock('../models/popDBInterface')
 jest.mock('../lib/tcpConnectedClient')
 
 describe('Server', () => {
-  let server, serverInitSpy, serverStartSpy, serverCloseSpy, interfaceSpy
+  let server, serverInitSpy, serverStartSpy, serverCloseSpy, interfaceSpy, dbSpy
   const mockServer = {
     init: jest.fn(),
     start: jest.fn(),
     close: jest.fn()
   }
-  const mockDB = {}
+  const mockDB = { init: jest.fn() }
   const mockInterface = { init: jest.fn() }
 
   beforeEach(() => {
-    DBConnection.mockImplementation(() => { return mockDB })
+    DBConnection.mockImplementation((client) => {
+      mockDB.init(client)
+      return mockDB
+    })
     POPDbInterface.mockImplementation((db) => {
       mockInterface.init(db)
       return mockInterface
@@ -34,6 +37,7 @@ describe('Server', () => {
     serverStartSpy = jest.spyOn(mockServer, 'start')
     serverCloseSpy = jest.spyOn(mockServer, 'close')
     interfaceSpy = jest.spyOn(mockInterface, 'init')
+    dbSpy = jest.spyOn(mockDB, 'init')
     server = new PopServer()
   })
 
@@ -53,6 +57,36 @@ describe('Server', () => {
     it('initialises the TCP server correctly', () => {
       expect(serverInitSpy).toHaveBeenCalledWith(server.port, server.address, HandshakeFactory, TcpConnectedClientFactory, mockInterface)
       expect(interfaceSpy).toHaveBeenCalledWith(mockDB)
+    })
+
+    it('initialises the correct db', () => {
+      expect(dbSpy).toHaveBeenCalled()
+    })
+  })
+
+  describe('injected arguments behaviour', () => {
+    const port = 2222
+    const host = 'localhost'
+    const mockClient = 'client'
+    const options = { port: port, host: host, client: mockClient }
+    beforeEach(() => {
+      server = new PopServer(options)
+    })
+
+    it('has a port of 5001', () => {
+      expect(server.port).toBe(port)
+    })
+
+    it('has a default address of 127.0.0.1', () => {
+      expect(server.address).toEqual(host)
+    })
+
+    it('creates a TCPServer', () => {
+      expect(server.server).toBe(mockServer)
+    })
+
+    it('initialises the correct db', () => {
+      expect(dbSpy).toHaveBeenCalledWith(mockClient)
     })
   })
 

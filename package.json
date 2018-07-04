@@ -3,12 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "jest --forceExit --coverage",
+    "test": "export NODE_ENV='test' && jest --forceExit --coverage",
     "lint": "eslint src/js",
     "buildDB": "jake --jakefile jake.js makeDatabases",
-    "dropDB": "jake --jakefile jake.js dropDatabases"
+    "dropDB": "jake --jakefile jake.js dropDatabases",
+    "testLocal": "export NODE_ENV='test' && npm run dropDB && npm run buildDB && npm run test"
   },
   "dependencies": {
+    "dotenv": "^6.0.0",
     "jake": "^8.0.16",
     "pg": "^7.4.3"
   },
