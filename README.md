@@ -4,7 +4,7 @@
 
 ## Summary
 
-A Javascript application that provides the core functionality of a POP3 mail server. The application implements a custom POP3 protocol to allow mail clients to request a users emails from a central database. It builds upon the [Net](https://nodejs.org/api/net.html#net_server_maxconnections) Node module which provides the network API for creating stream-based TCP or IPC servers and clients. The app can be run using node and will log server events such as clients connections, disconnections and the messages it receives from clients as part of the handshake.
+A Javascript application that provides the core functionality of a POP3 mail server. The application implements a custom POP3 protocol to allow mail clients to request a users emails from a central database. It builds upon the [Net](https://nodejs.org/api/net.html) Node module which provides the network API for creating stream-based TCP or IPC servers and clients. The app can be run using node and will log server events such as clients connections, disconnections and the messages it receives from clients as part of the handshake.
 
 ## Specification
 
@@ -35,6 +35,8 @@ The key features required were:
 * Ability to end client connections in the event of errors
 * Logging of key server events (Client connections, client disconnections, messages from clients, server start & server close)
 
+**Further information on POP3 servers can be found [here](XXXXXXXXXXXXX)**
+
 ### Acceptance Criteria
 
 * Server starts and logs start
@@ -42,6 +44,7 @@ The key features required were:
 * Server and client can exchange messages through the correct handshake sequence
 * Only emails for the specified USER are returned
 * Server connects with and can pull messages from a defined PostgresSQL database
+* Server closes and logs closing
 
 ## Getting Started
 
@@ -113,7 +116,7 @@ If you chose to host your own database then, once you have correctly installed a
 
 ##### Starting the app
 
-Once you have updated the config.js file then you should be ready to start the server. Using the command line enter ```node app.js``` and you should see ```Server started```.
+Once you have updated the config.js file then you should be ready to start the server. Using the command line enter ```npm start``` and you should see ```Server started```.
 
 #### Local database path
 
@@ -129,7 +132,7 @@ You should see ```Server started```.
 
 #### Connecting
 
-The server should now now up and running and you can test it out by opening up another terminal window and using a TCP/UDP connection tool such as Netcat or Telnet. We will use Netcat instructions to demonstrate.
+The server should now be up and running and you can test it out by opening up another terminal window and using a TCP/UDP connection tool such as Netcat or Telnet. We will use Netcat instructions to demonstrate.
 
 In the new terminal window enter the following commands.
 
@@ -178,13 +181,14 @@ We used ESLint with Standard.js as the style guide.
 
 ## Deployment
 
-This application was not deployed due to the fact that it required the hosting service to provide a static IP and port as well as a TCP connection so that clients could connect. We investigated hosting it on an Amazon EC2 instance however these challenges meant it would have taken to long to deploy and it was not a key requirement for the project.
+This application was not deployed due to the fact that it required the hosting service to provide a static IP and port as well as a TCP connection so that clients could connect. We investigated hosting it on an Amazon EC2 instance however these challenges meant it would have taken too long to deploy and it was not a key requirement for the project.
 
 ## Further development
 
 The main areas for improvement that we have identified are:
 
 * Implementing the full POP3 handshake with PASSWORD
+* Implementing a full user authentication service with user table in the database and hashed passwords (We developed some of this functionality but de-prioritised it.)
 * Error handling on the server and within the POPClientHandshake
 * Enforcing a strict ordering of commands within the handshake
 * Simplifying the handshake to remove the if/else statement
