@@ -4,13 +4,15 @@
 
 ## Summary
 
-A Javascript application that provides the core functionality of a POP3 mail server. The application implements a custom POP3 protocol to allow mail clients to request a users emails from a central database. It builds upon the [Net](https://nodejs.org/api/net.html) Node module which provides the network API for creating stream-based TCP or IPC servers and clients. The app can be run using node and will log server events such as clients connections, disconnections and the messages it receives from clients as part of the handshake.
+A Javascript application that mimics the core functionality of a POP3 mail server. The application implements a custom POP3 protocol to allow mail clients to request a users messages from a central database.
+
+It builds upon the [Net](https://nodejs.org/api/net.html) Node.js module which provides an API for creating stream-based TCP servers and clients. The app can be run using Node.js and will log server events such as clients connections, disconnections and the messages it receives.
 
 ## Specification
 
 ### Requirements
 
-The primary requirement was to create a simple POP3 server that would implement a handshake with a mail client which would follow the following sequence
+The primary requirement was to mimic a simple POP3 server that would implement a handshake with a mail client, following this sequence:
 
 ```
    ========                         ========
@@ -29,13 +31,12 @@ The primary requirement was to create a simple POP3 server that would implement 
 
 ```
 The key features required were:
-* A server that could accept client connections over TCP
+* A server that could accept connections over TCP
 * Implementation of the handshake shown above
-* Ability to connect to a PostgreSQL database both locally and hosted in the cloud
-* Ability to end client connections in the event of errors
+* Ability to connect to a database both locally or hosted in the cloud
 * Logging of key server events (Client connections, client disconnections, messages from clients, server start & server close)
 
-**Further information on POP3 servers can be found [here](XXXXXXXXXXXXX)**
+**Further information on POP3 servers can be found [here](https://en.wikipedia.org/wiki/Post_Office_Protocol)**
 
 ### Acceptance Criteria
 
@@ -43,7 +44,7 @@ The key features required were:
 * Server allows connections of client over TCP and logs it
 * Server and client can exchange messages through the correct handshake sequence
 * Only emails for the specified USER are returned
-* Server connects with and can pull messages from a defined PostgresSQL database
+* Server connects with and can pull messages from a database
 * Server closes and logs closing
 
 ## Getting Started
@@ -52,7 +53,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-This requires Node to run it and npm as the package manager to simplify the build process and include all necessary dependencies. If you do not have Node installed it is recommended you do so ([Node](https://nodejs.org/en/download/)).
+This requires Node.js to run it and npm as the package manager to simplify the build process and include all necessary dependencies. If you do not have Node installed it is recommended you do so ([Node](https://nodejs.org/en/download/)).
 
 ### Installing
 
@@ -102,14 +103,6 @@ In order to start the app you will need to create the databases that the server 
 
 If you chose to host your own database then, once you have correctly installed and set up the necessary dependencies, you can run the app from the command line. Before you do so you will need to set up the port and host which can be found in the config.js file. App.js runs the app using the 'production' config so you will need to change the port and host to match your desired setting. It is recommended to leave the port number as it is, unless you have another process running on that port. The host address can be set to your local host IPv4 or your local network IPv4 address. In most cases your local host will be '127.0.0.1'. To find you local network IPv4 address you will need to follow the following steps.
 
-##### Windows
-
-1. Click on the Start menu and type cmd. When you see the cmd applications in Start menu panel, click it or just press enter.
-2. A command line window will open. Type ipconfig and press enter.
-3. You'll see a bunch of information, but the line you want to look for is "IPv4 Address." The number across from that text is your local IP address.
-
-##### Mac
-
 1. Open System Preferences using the Apple menu at the top lefthand corner of your screen.
 2. Click on the icon labeled Network.
 3. Click on the Advanced button. This should open up a new window with a series of options. Select TCP/IP and the required information will be labelled IPv4 Address.
@@ -146,7 +139,7 @@ If the server is up and running properly you should see ```250``` returned to yo
 
 ### Methodology
 
-The aim for the project was to understand how email worked in greater detail. The high level goals were to have code that was understandable, well encapsulated and easy to extend. We took and OOP approach and, although there are still plenty of areas we would like to improve if given the time, we tried to keep to Single Responsibility Principle. This particular repository represents just the POP Server element of the project and more information about the project as a whole can be found [here](XXXXXXXXXXXXXXXX).
+The aim for the project was to understand how email worked in greater detail. The high level goals were to have code that was understandable, well encapsulated and easy to extend. We took and Object Oriented Programming (OOP) approach and, although there are still plenty of areas we would like to improve if given the time, we tried to keep to Single Responsibility Principle. This particular repository represents just the POP Server element of the project and more information about the project as a whole can be found [here](https://github.com/charmalt/final-project-main).
 
 The following diagram shows the relationships between the objects as well as their properties and public methods.
 
@@ -161,6 +154,7 @@ The project was written using Javascript with ES6 syntax. This language was sele
 ### Testing Approach
 
 We took a test-driven development (TDD) approach to this project with extensive unit testing to ensure our code was behaving as we intended. We isolated our test objects using Jest's in-build mocking capabilities. We made sure to mock out any imported libraries as these should have been tested by the library developers.
+
 Certain key interfaces such as database connection and connecting to clients were tested using feature tests. One area for improvement would be to have more feature tests as this would have helped identify some issues with functionality at an earlier stage.
 
 ### Running the tests
