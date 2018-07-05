@@ -6,6 +6,7 @@
     "test": "export NODE_ENV='test' && jest --forceExit --coverage",
     "lint": "eslint src/js",
     "buildDB": "jake --jakefile jake.js makeDatabases",
+    "start": "node app.js",
     "dropDB": "jake --jakefile jake.js dropDatabases",
     "testLocal": "export NODE_ENV='test' && npm run dropDB && npm run buildDB && npm run test"
   },
@@ -23,5 +24,20 @@
     "eslint-plugin-standard": "^3.1.0",
     "jest": "^23.2.0",
     "standard": "^11.0.1"
-  }
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
+  },
+  "engines": {
+    "node": "8.11.1"
+  },
+  "contributors": [
+    "Charlene Chetcuti",
+    "Ben Furber",
+    "John Newman",
+    "Igor Ryabchuk",
+    "George Sykes"
+  ]
 }
